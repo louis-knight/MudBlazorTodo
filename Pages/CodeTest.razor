@@ -1,0 +1,46 @@
+﻿@page "/"
+
+<MudPaper Class="d-flex flex-row pa-2" Elevation="4">
+    <MudTextField @bind-Value="TextInput" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+    <MudButton Color="Color.Success" Class="mx-4 my-1" StartIcon="@Icons.Material.Sharp.Add" OnClick="AddEntry">Add</MudButton>
+</MudPaper>
+
+<MudPaper Class="pa-1 my-8" Width="400px" Elevation="4">
+    <MudTreeView Items="TreeItems">
+        <ItemTemplate>
+            <MudTreeViewItem Items="@context.TreeItems" Value="@context" Text="@context.Title" IconColor="Color.Success"/>
+            <MudDivider />
+        </ItemTemplate>
+    </MudTreeView>
+</MudPaper>
+
+@code {
+
+    private HashSet<TreeItemData> TreeItems { get; set; } = new HashSet<TreeItemData>();
+
+    public string TextInput { get; set; }
+    int entryNumber = 1;
+
+    public class TreeItemData
+    {
+        public string Title { get; set; }
+        public string Icon { get; set; }
+        public bool Complete { get; set; }
+        public HashSet<TreeItemData> TreeItems { get; set; }
+
+        public TreeItemData(string title, bool complete)
+        {
+            Title = title;
+            Complete = complete;
+            
+            if(complete==true){ Icon = "@Icons.Filled.CheckBox"; } else { Icon = "@Icons.Filled.CheckBoxOutline"; }
+
+        }
+    }
+
+    public void AddEntry()
+    {
+        TreeItems.Add(new TreeItemData($"{entryNumber} {TextInput}", false));
+        entryNumber++;
+    }
+}
