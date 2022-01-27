@@ -1,0 +1,56 @@
+﻿@page "/"
+
+<MudGrid>
+    <MudItem xs="5">
+        <MudPaper Class="ma-3 pa-3 d-flex flex-column" Elevation="4">
+            <MudPaper Class="d-flex flex-row" >
+                <MudTextField Class="ma-2" @bind-Value="textInput" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                <MudButton Color="Color.Success" Class="mx-4 my-1" StartIcon="@Icons.Material.Sharp.Add" OnClick="AddEntry">Add</MudButton>
+            </MudPaper>
+            <div>
+                <MudList Clickable="true" @bind-SelectedItem="selectedItem">
+                    @foreach(todoTask item in taskList)
+                    {
+                    <div Class="d-flex flex-row">
+                        <MudToggleIconButton @bind-Toggled="@item.IsComplete" Icon="@Icons.Outlined.CheckBoxOutlineBlank" ToggledIcon="@Icons.Outlined.CheckBox"/>
+                        <MudListItem Text="@item.Title" Value="@item."/>
+                    </div>
+                    }
+                </MudList>
+            </div>
+
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="7">
+        <MudPaper Class="d-flex mud-width-full py-8" Elevation="4">
+@*            <MudTextField @bind-Value="selectedItem" Label="Filled" Variant="Variant.Filled"></MudTextField>
+*@        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    List<todoTask> taskList = new List<todoTask>();
+    string textInput;
+    MudListItem selectedItem;
+
+    public class todoTask
+    {
+        public string Title { get; set; }
+        public string Note { get; set; }
+        public bool IsComplete { get; set; }
+
+        public todoTask(string title)
+        {
+            Title = title;
+        }
+    }  
+
+    public void AddEntry()
+    {
+        if(textInput != null)
+        {
+            taskList.Add(new todoTask(textInput)); 
+        }
+        textInput = null;
+    }
+}
