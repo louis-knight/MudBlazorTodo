@@ -8,12 +8,14 @@
                 <MudButton Color="Color.Success" Class="mx-4 my-1" StartIcon="@Icons.Material.Sharp.Add" OnClick="AddEntry">Add</MudButton>
             </MudPaper>
             <div>
-                <MudList Clickable="true" @bind-SelectedItem="selectedItem">
+                <MudList Clickable="true" @bind-SelectedItem="@selectedItem">
                     @foreach(todoTask item in taskList)
                     {
                     <div Class="d-flex flex-row">
                         <MudToggleIconButton @bind-Toggled="@item.IsComplete" Icon="@Icons.Outlined.CheckBoxOutlineBlank" ToggledIcon="@Icons.Outlined.CheckBox"/>
-                        <MudListItem Text="@item.Title" Value="@item."/>
+                        <MudListItem Text="@item.Title" Value="@item"/>
+@*                        <MudSpacer />
+                        <MudIconButton Icon="@Icons.Outlined.Delete" @OnClick="@(() => Delete(item))" ></MudIconButton>*@
                     </div>
                     }
                 </MudList>
@@ -22,21 +24,25 @@
         </MudPaper>
     </MudItem>
     <MudItem xs="7">
-        <MudPaper Class="d-flex mud-width-full py-8" Elevation="4">
-@*            <MudTextField @bind-Value="selectedItem" Label="Filled" Variant="Variant.Filled"></MudTextField>
-*@        </MudPaper>
+        <MudPaper Class="d-flex flex-column mud-width-full pa-3 ma-3" Elevation="4">
+            <MudText Typo="Typo.h5">@selectedItem.Text</MudText>
+            <MudTextField T="string" Lines="5" @bind-Value="@(((todoTask)selectedItem.Value).Note)" />
+        </MudPaper>
     </MudItem>
 </MudGrid>
 
 @code {
     List<todoTask> taskList = new List<todoTask>();
-    string textInput;
-    MudListItem selectedItem;
+    string? textInput;
+    //todoTask selectedValue = new todoTask("");
+    //string selectedValue = "";
+    MudListItem selectedItem = new MudListItem{Text = "", Value = new todoTask("")};
+
 
     public class todoTask
     {
         public string Title { get; set; }
-        public string Note { get; set; }
+        public string? Note { get; set; }
         public bool IsComplete { get; set; }
 
         public todoTask(string title)
@@ -49,8 +55,14 @@
     {
         if(textInput != null)
         {
-            taskList.Add(new todoTask(textInput)); 
+            taskList.Add(new todoTask(textInput));
+            taskList.Last().Note = "heelo" + taskList.Count;
         }
         textInput = null;
+    }
+
+    void Delete(todoTask item1)
+    {
+        taskList.Remove(item1);
     }
 }
